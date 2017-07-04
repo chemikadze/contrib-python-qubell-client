@@ -634,13 +634,14 @@ def _describe_submodules(path, submodules, level):
 
 
 @instance_cli.command("launch", help="Launch instance in application")
+@click.option("--version", default=None, type=int, help="Target manifest version")
 @click.option("--revision", default=None, help="Revision to launch")
 @click.option("--environment", default=None, help="Environment used to launch instance")
 @click.option("--destroy", default=60 * 60, help="Schedule destroy (seconds)")
 @click.option("--parameter", default=False, type=(unicode, unicode), multiple=True, help="Parameter value")
 @click.argument("application")
 @click.argument("name", default=None, required=False)
-def launch_instance(revision, environment, destroy, application, name, parameter):
+def launch_instance(version, revision, environment, destroy, application, name, parameter):
     platform = _get_platform()
     org = platform.get_organization(QUBELL["organization"])
     app = org.get_application(application)
@@ -667,12 +668,12 @@ def launch_instance(revision, environment, destroy, application, name, parameter
 
     inst = org.create_instance(application=app, revision=revision, environment=env,
                                name=name, parameters=parameters, destroyInterval=destroy * 1000,
-                               submodules=submodules)
+                               submodules=submodules, manifestVersion=version)
     _describe_instance(inst, True)
 
 
 @instance_cli.command("reconfigure", help="Reconfigure running instance")
-@click.option("--version", default=None, help="Target manifest version")
+@click.option("--version", default=None, type=int, help="Target manifest version")
 @click.option("--revision", default=None, help="Target revision")
 @click.option("--parameter", default=False, type=(unicode, unicode), multiple=True, help="Parameter value")
 @click.argument("instance")

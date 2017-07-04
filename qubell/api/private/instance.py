@@ -277,7 +277,7 @@ class Instance(Entity, ServiceMixin, InstanceRouter):
 
     @staticmethod
     def new(router, application, revision=None, environment=None, name=None, parameters=None,
-            submodules=None, destroyInterval=None):
+            submodules=None, destroyInterval=None, manifestVersion=None):
 
         if not environment:
             environment = application.organization.defaultEnvironment
@@ -299,6 +299,8 @@ class Instance(Entity, ServiceMixin, InstanceRouter):
             conf['destroyInterval'] = int(destroyInterval)
         if revision:
             conf['revisionId'] = revision.id
+        if manifestVersion:
+            conf['version'] = int(manifestVersion)
         conf['submodules'] = submodules or {}
         log.info(("Starting instance: %s\n"
                   "    Application: id=%s\n"
