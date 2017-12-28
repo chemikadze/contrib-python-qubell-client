@@ -300,7 +300,7 @@ class Instance(Entity, ServiceMixin, InstanceRouter):
         if revision:
             conf['revisionId'] = revision.id
         if manifestVersion:
-            conf['version'] = int(manifestVersion)
+            conf['manifestVersion'] = int(manifestVersion)
         conf['submodules'] = submodules or {}
         log.info(("Starting instance: %s\n"
                   "    Application: id=%s\n"
