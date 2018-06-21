@@ -676,8 +676,9 @@ def launch_instance(version, revision, environment, destroy, application, name, 
 @click.option("--version", default=None, type=int, help="Target manifest version")
 @click.option("--revision", default=None, help="Target revision")
 @click.option("--parameter", default=False, type=(unicode, unicode), multiple=True, help="Parameter value")
+@click.option("--preserve", is_flag=True, default=False, help="Use current property values as baseline")
 @click.argument("instance")
-def reconfigure_instance(version, revision, instance, parameter):
+def reconfigure_instance(version, revision, instance, parameter, preserve):
     platform = _get_platform()
     org = platform.get_organization(QUBELL["organization"])
     inst = org.instances[instance]
@@ -692,6 +693,10 @@ def reconfigure_instance(version, revision, instance, parameter):
             return _get_module(module, path[1])
         else:
             return module
+
+    if preserve:
+        for param in inst.config:
+            parameters[param['id']] = param['value']
 
     for (param_name, param_value) in parameter:
         if ":" in param_name:
